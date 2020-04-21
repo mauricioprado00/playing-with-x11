@@ -8,4 +8,5 @@ gcc highlight.cc $(pkg-config --cflags --libs x11) -o bin/highlight
 gcc get_cursor.cc $(pkg-config --cflags --libs x11) -o bin/get_cursor
 gcc overlay.cc $(pkg-config --cflags --libs x11) -o bin/overlay
 gcc overlay2.cc $(pkg-config --cflags --libs x11) -o bin/overlay2
+gcc rectangle.cc $(pkg-config --cflags --libs x11) -o bin/rectangle
 ```
