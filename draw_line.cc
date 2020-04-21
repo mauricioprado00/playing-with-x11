@@ -56,8 +56,8 @@ void draw_line(char *display_name, unsigned int time, char *color_name, int x1, 
     XSetWindowAttributes window_attr;
     window_attr.override_redirect = 1;
     Window window = XCreateWindow(display, XRootWindow(display, screen),
-        x1, y1,                             // x, y position
-        x2-x1, y2-y1,                       // width, height
+        x1 < x2 ? x1 : x2, y1 < y2 ? y1 : y2,// x, y position
+        abs(x2-x1), abs(y2-y1),             // width, height
         0,                                  // border width
         DefaultDepth(display, screen),      // depth
         CopyFromParent,                     // class
@@ -102,7 +102,21 @@ void draw_line(char *display_name, unsigned int time, char *color_name, int x1, 
     XSetLineAttributes(display, gc, line_width, LineSolid, CapButt, JoinBevel);
 
     // Draw the line
-    XDrawLine(display, window, gc, 0, 0, x2-x1, y2-y1);
+    if (x1 > x2) {
+        x1 = x1 - x2;
+        x2 = 0;
+    } else {
+        x2 = x2 - x1;
+        x1 = 0;
+    }
+    if (y1 > y2) {
+        y1 = y1 - y2;
+        y2 = 0;
+    } else {
+        y2 = y2 - y1;
+        y1 = 0;
+    }
+    XDrawLine(display, window, gc, x1, y1, x2, y2);
     XSync(display, False);
 
     // free resources
