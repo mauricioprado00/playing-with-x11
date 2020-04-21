@@ -18,7 +18,7 @@ int size = 220;
 int step = 40;
 int speed = 400;
 int line_width = 2;
-char color_name[] = "black";
+char color_name[] = "red";
 
 
 int main(int argc, char* argv[]) {
@@ -39,6 +39,9 @@ int main(int argc, char* argv[]) {
     XQueryPointer(display, XRootWindow(display, screen),
         &child_win, &root_win,
         &root_x, &root_y, &win_x, &win_y, &mask);
+
+    printf("root_x: %u\n", root_x);
+    printf("root_y: %u\n", root_y);
 
     // Create a window at the mouse position
     XSetWindowAttributes window_attr;
@@ -99,6 +102,7 @@ int main(int argc, char* argv[]) {
         XSync(display, False);
         usleep(speed * 100);
     }
+    usleep(speed * 100 * 50);
     XFreeGC(display, gc);
     XCloseDisplay(display);
 }
