@@ -7,14 +7,15 @@
 #include <X11/Xutil.h>
 
 int line_width = 2;
-int speed = 400;
+unsigned int default_time = 5000;
 char default_color_name[] = "Tomato";
 
-void draw_line(char *display_name, char *color_name, int x1, int y1, int x2, int y2);
+void draw_line(char *display_name, unsigned int time, char *color_name, int x1, int y1, int x2, int y2);
 
 main(int argc, char *argv[]) {
     char *display_name = getenv("DISPLAY");
     char *color_name = default_color_name;
+    unsigned int time = default_time;
 
     if (!display_name) {
         fprintf(stderr, "%s: cannot connect to X server '%s'\n", argv[0], display_name);
@@ -22,7 +23,7 @@ main(int argc, char *argv[]) {
     }
 
     if(argc<5) {
-       printf("usage: \n\tdraw_line x1 y1 x2 y2 [color_name | color_hex]\n");
+       printf("usage: \n\tdraw_line x1 y1 x2 y2 [color_name | color_hex] [time]\n");
        printf("\n\tcolor_name can be one of https://www.w3schools.com/colors/colors_names.asp\n");
        exit(1);
     }
@@ -32,15 +33,20 @@ main(int argc, char *argv[]) {
         printf("using custom color name: %s\n", color_name);
     }
 
+    if (argc >= 6) {
+        time = atoi(argv[6]);
+        printf("using custom time: %d\n", time);
+    }
+
     int x1 = atoi(argv[1]);
     int y1 = atoi(argv[2]);
     int x2 = atoi(argv[3]);
     int y2 = atoi(argv[4]);
 
-    draw_line(display_name, color_name, x1, y1, x2, y2);
+    draw_line(display_name, time, color_name, x1, y1, x2, y2);
 }
 
-void draw_line(char *display_name, char *color_name, int x1, int y1, int x2, int y2) {
+void draw_line(char *display_name, unsigned int time, char *color_name, int x1, int y1, int x2, int y2) {
     printf("drawing line in %s(%d, %d) (%d, %d)\n", display_name, x1, y1, x2, y2);
 
     Display *display = XOpenDisplay(display_name);
@@ -100,7 +106,7 @@ void draw_line(char *display_name, char *color_name, int x1, int y1, int x2, int
     XSync(display, False);
 
     // free resources
-    usleep(speed * 100 * 200);
+    usleep(time * 1000);
     XFreeGC(display, gc);
     XCloseDisplay(display);
 
