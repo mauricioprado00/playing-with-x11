@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
         &child_win, &root_win,
         &root_x, &root_y, &win_x, &win_y, &mask);
 
-    printf("root %u %u\n", root_x, root_y);
+    printf("%u %u\n", root_x, root_y);
 
     XCloseDisplay(display);
 }
