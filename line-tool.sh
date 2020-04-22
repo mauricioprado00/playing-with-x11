@@ -17,6 +17,6 @@ elif [ "$1" == "to" ]; then
     get_cursor > $to_file
     highlight-point $(cat $to_file) green 100
 elif [ "$1" == "show" ]; then
-    draw_line $(cat $from_file) $(cat $to_file) green 500
+    draw_line $(cat $from_file) $(cat $to_file) black 500
 fi
 
