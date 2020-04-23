@@ -19,12 +19,12 @@ int step = 40;
  * Save image to a PPM image file format
  * @see https://en.wikipedia.org/wiki/Netpbm#File_formats
  */
-void save_ppm(XImage *pImage) {
+void save_ppm(XImage *pImage, char * filename) {
     FILE *fp;
     int i, j;
     char *pointer;
 
-    fp = fopen("screenshot.ppm", "wb");
+    fp = fopen(filename, "wb");
 
     if(fp == NULL)
         return;
@@ -41,6 +41,31 @@ void save_ppm(XImage *pImage) {
             pointer += 4;
         }
     }
+}
+
+XImage * image_grayscale_colorimetric(XImage *pImage)
+{
+    XImage *grayscale = (XImage *)malloc(sizeof(XImage));
+    grayscale->width = pImage->width;
+    grayscale->height = pImage->height;
+    grayscale->data = (char *) malloc(pImage->width * pImage->height * 4);
+    char * source = pImage->data;
+    char * target = grayscale->data;
+    unsigned int offset = 0;
+    unsigned char grayvalue;
+    int i,j;
+    for (i = 0; i < pImage->width; i++) {
+        for (j = 0; j < pImage->height; j++) {
+            grayvalue = source[offset + 2] * 0.2126 + source[offset +1] * 0.7172 + source[offset +0] * 0.0722;
+            target[offset+0] = grayvalue;
+            target[offset+1] = grayvalue;
+            target[offset+2] = grayvalue;
+            // move to next pixel
+            offset += 4;
+        }
+    }
+
+    return grayscale;
 }
 
 int main(int argc, char* argv[]) {
@@ -104,7 +129,9 @@ int main(int argc, char* argv[]) {
     XWindowAttributes attr;
     XGetWindowAttributes(display, window, &attr);
     image = XGetImage(display,window,0,0,attr.width,attr.height,AllPlanes,ZPixmap);
-    save_ppm(image);
+    save_ppm(image, "screenshot.ppm");
+    XImage *grayscale = image_grayscale_colorimetric(image);
+    save_ppm(grayscale, "screenshot-grayscale.ppm");
 
     XCloseDisplay(display);
 }
