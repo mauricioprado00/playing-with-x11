@@ -12,4 +12,5 @@ gcc overlay2.cc $(pkg-config --cflags --libs x11) -o bin/overlay2
 gcc rectangle.cc $(pkg-config --cflags --libs x11) -o bin/rectangle
 gcc draw_line.cc $(pkg-config --cflags --libs x11) -o bin/draw_line
 gcc highlight-point.cc $(pkg-config --cflags --libs x11) -o bin/highlight-point
+gcc threshold.cc $(pkg-config --cflags --libs x11) -o bin/threshold
 ```
